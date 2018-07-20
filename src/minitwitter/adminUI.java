@@ -2,7 +2,9 @@ package minitwitter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class adminUI {
@@ -11,6 +13,8 @@ public class adminUI {
     private int groups = 0;
     private int messages = 0;
     private int positives = 0;
+    private Set<String> names = new HashSet<String>();
+    private boolean valid = true;
     
     private JFrame frame = new JFrame("Admin UI");
     private JPanel mainPanel = new JPanel();
@@ -19,21 +23,24 @@ public class adminUI {
     private DefaultMutableTreeNode top = new DefaultMutableTreeNode("Root");
     private JTree treeViewer = new JTree(top);
     private JTextField userId = new JTextField("User ID");
-    JButton addUser = new JButton("Add User");
-    JTextField groupId = new JTextField("Group ID");
-    JButton addGroup = new JButton("Add Group");
-    JButton userView = new JButton("Open User View");
-    JButton userTotal = new JButton("Show User Total");
-    JButton groupTotal = new JButton("Show Group Total");
-    JButton messageTotal = new JButton("Show Messages Total");
-    JButton positive = new JButton("Show Positive Percentage");
+    private JButton addUser = new JButton("Add User");
+    private JTextField groupId = new JTextField("Group ID");
+    private JButton addGroup = new JButton("Add Group");
+    private JButton userView = new JButton("Open User View");
+    private JButton userTotal = new JButton("Show User Total");
+    private JButton groupTotal = new JButton("Show Group Total");
+    private JButton messageTotal = new JButton("Show Messages Total");
+    private JButton positive = new JButton("Show Positive Percentage");
+    
+    private JButton verify = new JButton("Verify IDs");
+    private JButton lastUpdated = new JButton("Last Updated");
     
     Action action = new Action();
     
     public adminUI() {
         action.setAdmin(this);
         mainPanel.setLayout(new FlowLayout());
-        panel.setLayout(new GridLayout(5, 2, 10, 10));
+        panel.setLayout(new GridLayout(6, 2, 10, 10));
         treePanel.setLayout(new BorderLayout());
         treePanel.add(treeViewer);
         panel.add(userId);
@@ -59,6 +66,12 @@ public class adminUI {
         panel.add(positive);
         positive.setActionCommand("POSITIVE");
         positive.addActionListener(action);
+        panel.add(verify);
+        verify.setActionCommand("VERIFY");
+        verify.addActionListener(action);
+        panel.add(lastUpdated);
+        lastUpdated.setActionCommand("LAST_UPDATED");
+        lastUpdated.addActionListener(action);
         mainPanel.add(treePanel);
         mainPanel.add(panel);
         frame.add(mainPanel);
@@ -66,6 +79,17 @@ public class adminUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+    
+    public boolean verifyTree() {
+        return valid;
+    }
+    
+    public void addName(String name) {
+        names.add(name);
+        if(names.contains(name)) {
+            valid = false;
+        }
     }
     
     public void incrementUsers() {
@@ -108,7 +132,12 @@ public class adminUI {
         return profiles;
     }
     
+    public void setValid(boolean validity) {
+        valid = validity;
+    }
+    
     public void update() {
+        frame.pack();
         frame.revalidate();
         frame.pack();
     }

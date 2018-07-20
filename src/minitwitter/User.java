@@ -3,7 +3,8 @@ package minitwitter;
 import java.awt.List;
 
 public class User implements Observer {
-    String id;
+    private String id;
+    private long lastUpdate;
     
     public User(String identity) {
         id = identity;
@@ -14,11 +15,19 @@ public class User implements Observer {
     }
     
     public void tweet() {
-        
+        lastUpdate = System.currentTimeMillis();
     }
     
     public void update() {
         
+    }
+    
+    public String getID(){
+        return id;
+    }
+    
+    public long getLastUpdate() {
+        return lastUpdate;
     }
     
     public List getFollowers() {
