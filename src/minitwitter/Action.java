@@ -23,8 +23,14 @@ public class Action implements ActionListener {
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(user);
             model.insertNodeInto(child, root, root.getChildCount());
             tree.scrollPathToVisible(new TreePath(child.getPath()));
+            admin.addName(user);
+            for(int i = 0; i < user.length(); i++) {
+                if(user.charAt(i) == ' ')
+                    admin.setValid(false);
+            }
             admin.incrementUsers();
             admin.update();
+            System.out.println(user + " created at: " + System.currentTimeMillis());
         }
         else if(command == "ADD_GROUP") {
             String group = admin.getGroupID().getText();
@@ -36,6 +42,7 @@ public class Action implements ActionListener {
             tree.scrollPathToVisible(new TreePath(child.getPath()));
             admin.incrementGroups();
             admin.update();
+            System.out.println(group + " created at: " + System.currentTimeMillis());
         }
         else if(command == "USER_VIEW") {
             Hashtable profiles = admin.getProfiles();
@@ -87,7 +94,33 @@ public class Action implements ActionListener {
             userViewer.add(user);
         }
         else if(command == "TWEET") {
-            
+            userViewer.setLastUpdated(System.currentTimeMillis());
+            userViewer.refresh();
+        }
+        else if(command == "VERIFY") {
+            JFrame frame = new JFrame();
+            JPanel panel = new JPanel();
+            JLabel label = new JLabel();
+            if(admin.verifyTree()) {
+                label.setText("IDs are valid.");
+            }
+            else {
+                label.setText("Invalid ID(s) detected.");
+            }
+            panel.add(label);
+            frame.add(panel);
+            frame.pack();
+            frame.setVisible(true);
+        }
+        else if(command == "LAST_UPDATED") {
+            String last = userViewer.getID();
+            JFrame frame = new JFrame("Last updated");
+            JPanel panel = new JPanel();
+            JLabel label = new JLabel("Last user updated: " + last);
+            panel.add(label);
+            frame.add(panel);
+            frame.pack();
+            frame.setVisible(true);
         }
     }
     
